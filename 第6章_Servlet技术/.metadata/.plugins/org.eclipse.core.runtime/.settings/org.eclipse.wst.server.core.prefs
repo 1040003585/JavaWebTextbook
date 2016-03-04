@@ -1,4 +1,0 @@
-#Fri Mar 04 14:38:01 CST 2016
-module-start-timeout=300000
-runtimes=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<runtimes>\r\n  <runtime id\="Apache Tomcat v6.0" location\="D\:/Program Files/Apache Software Foundation/Tomcat 6.0" name\="Apache Tomcat v6.0" runtime-type-id\="org.eclipse.jst.server.tomcat.runtime.60" timestamp\="0"/>\r\n  <runtime id\="HTTP Server" location\="" name\="HTTP Server" runtime-type-id\="org.eclipse.wst.server.http.runtime" timestamp\="0"/>\r\n  <runtime id\="J2EE Preview" name\="J2EE Preview" runtime-type-id\="org.eclipse.jst.server.preview.runtime" timestamp\="0"/>\r\n</runtimes>\r\n
-eclipse.preferences.version=1
