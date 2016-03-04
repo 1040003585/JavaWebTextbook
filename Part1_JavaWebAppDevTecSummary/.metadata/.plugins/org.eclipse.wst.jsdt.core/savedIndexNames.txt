@@ -1,3 +1,0 @@
-INDEX VERSION 1.121+E:\gitfile\javawebtextbook\第1章_JavaWeb应用开发技术概述\.metadata\.plugins\org.eclipse.wst.jsdt.core
-668162751.index
-3731973477.index
