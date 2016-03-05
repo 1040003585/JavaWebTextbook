@@ -1,0 +1,72 @@
+package beans;
+public class Add{
+    private int shuju1;
+    private int shuju2;
+    public Add(){}
+    public int getShuju1(){ return shuju1;}
+    public void setShuju1(int shuju1){this.shuju1 = shuju1;}
+    public int getShuju2(){return shuju2;}
+    public void setShuju2(int shuju2){this.shuju2 =shuju2;}
+    public int sum(){ retrun shuju1+shuju2;}
+}
+
+
+
+
+
+
+<!-- 程序input.jsp -->
+<%@ page language="java" pageEncoding="UTF-8"%>
+<html>
+  <head> <title>提交任意2个整数的页面</title> </head>  
+  <body>
+  <h3> 按下列格式要求，输入两个整数：</h3><br>
+   <form action="show.jsp" method="post">
+         加数：<input name="shuju1"><br><br>
+         被加数：<input name="shuju2"><br><br>
+         <input type=submit value="提交">
+   </form>
+  </body>
+</html>
+
+
+
+
+
+<!-- 程序show.sp -->
+<%@ page language="java" import="java.util.*" pageEncoding="GB2312"%>
+<html>
+  <head>  <title>利用JavaBean+JSP求两数和</title> </head>  
+  <body> 
+     <jsp:useBean id="c" class="beans.Add" scope= "request"/>
+     <jsp:setProperty name="c" property="*"/> 
+     <p>调用jsp:getProperty作标签以及求和方法获取数据并显示：<br>
+       <jsp:getProperty name="c" property="shuju1"/>+
+       <jsp:getProperty name="c" property="shuju2"/>=<%=c.sum()%><br>
+     </p>
+     <p>调用使用类的方法获取数据并显示：<br>
+       <%=c.getShuju1()%>+<%= c.getShuju2()%>= <%=c.sum()%><br>
+     </p>
+  </body>
+</html>
+
+
+
+
+
+<%@ page contentType="text/html" import="beans.Add" pageEncoding="UTF-8"%>
+<html>
+    <head>  <title>利用JavaBean+JSP求两数和</title> </head>
+    <body>
+        <%request.setCharacterEncoding("UTF-8"); %>
+        <%  Add c=new Add();
+             String s1=request.getParameter("shuju1");
+             String s2=request.getParameter("shuju2");
+             x=Integer.parseInt(s1);  
+             y=Integer.parseInt(s2);
+             c.setShuju1(x);
+             c.setShuju2(y);
+        %>
+          <%=c.getShuju1()%>+<%= c.getShuju2()%>= <%=c.sum()%><br>
+   </body>
+</html>

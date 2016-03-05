@@ -1,0 +1,35 @@
+（1）重新设计实现数据求和的JavaBean类Add.Java，其代码如下：
+package beans;
+public class Add{
+    private int shuju1;
+    private int shuju2;
+    private int sum;
+    public Add(){}
+    public int getShuju1(){ return shuju1;}
+    public void setShuju1(int shuju1){this.shuju1 = shuju1;}
+    public int getShuju2(){return shuju2;}
+    public void setShuju2(int shuju2){this.shuju2 =shuju2;}
+    public int getSum(){ retrun shuju1+shuju2;}
+    public void setSum(int sum){this.sum =sum;}
+}
+（2）提交整数的JSP页面（input.jsp），代码不变。关键代码如下：
+   <form action="show.jsp" method="post">
+         加数：<input name="shuju1"><br><br>
+         被加数：<input name="shuju2"><br><br>
+         <input type=submit value="提交">
+   </form>
+（3）计算并显示计算结果的show.jsp，其代码如下：
+<!-- 程序show.sp -->
+<%@ page language="java" import="java.util.*" pageEncoding="GB2312"%>
+<html>
+  <head>  <title>利用JavaBean+JSP求两数和</title> </head>  
+  <body> 
+     <jsp:useBean id="c" class="beans.Add" scope= "request"/>
+     <jsp:setProperty name="c" property="*"/> 
+     <p>调用jsp:getProperty作标签显示结果值：<br>
+       <jsp:getProperty name="c" property="shuju1"/>+
+       <jsp:getProperty name="c" property="shuju2"/>=
+       <jsp:getProperty name="c" property="sum"/>
+     </p>
+  </body>
+</html>

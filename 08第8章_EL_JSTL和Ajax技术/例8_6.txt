@@ -1,0 +1,48 @@
+（1）设计的JavaBeran：：BookBean.java，其代码如下：
+package beans;
+public class BookBean{
+	private int bookid;        //书号
+	private String bookname;  //书名
+	private String author;      //作者
+	private float price;        //价格
+	private String publisher;   //出版社
+	public BookBean() {
+         bookid=1000;
+         bookname="Java Web开发";
+         author="Abc";
+         price=50;
+         publisher="机械工业出版社";
+	}
+	public String getAuthor() {return author;}
+	public void setAuthor(String author) {this.author = author;}
+	public int getBookid() {return bookid;}
+	public void setBookid(int bookid) {this.bookid = bookid;}
+	public String getBookname() {return bookname;}
+	public void setBookname(String bookname) {this.bookname = bookname;}	
+	public float getPrice() {return price;}
+	public void setPrice(float price) {this.price = price;}
+	public String getPublisher() {	return publisher;}
+	public void setPublisher(String publisher) {this.publisher = publisher;}
+}
+（2）设计beanEL.jsp，其代码如下：
+<%@ page co tentType="text/html; charset=gb2312"%>
+<%@ page import="beans.BookBean"%>
+<html>
+	<head><title>使用EL访问JavaBean属性</title></head>
+	<body>
+		<jsp:useBean id="BookBean" class="beans.BookBean" scope="session"/>
+		<%	//通过常规方法访问JavaBean的属性
+			int BId = BookBean.getBookid();
+			BookBean.setBookid(1002);
+			String BName = BookBean.getBookname();
+			BookBean.setBookname("Java Web开发");
+		%>
+		<!--通过EL存取运算符访问JavaBean的属性-->
+		书号：${BookBean.bookid}<br>
+		书名：${BookBean.bookname}<br>
+		作者：${BookBean.author}<br>
+		出版社：${BookBean["publisher"]}	<br>
+		价格：${BookBean.price}<br>
+	</body>
+</html>
+

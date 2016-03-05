@@ -1,0 +1,45 @@
+（1）建立一个JavaBean：ch07_4.Add2，其代码如下：
+package ch07_4;
+public class Add2{
+    private int a;
+    private int b;
+    public int getA(){ return a;}
+    public void setA(int a){this.a = a;}
+    public int getB(){return b;}
+    public void setB(int b){this.b = b;}
+    public int sum(){
+      int c,s=0;
+      if(a>b){c=a;a=b;b=c;}
+      int x=a;
+      while (x <=b ){ s += x;  ++x; }
+      return s;
+    }
+}
+
+（2）设计提交任意两个整数的JSP页面（ch07_4_tijiao.jsp），其代码如下：
+<!-- 程序ch07_4_tijiao.sp -->
+<%@ page language="java" pageEncoding="GB2312"%>
+<html>
+  <head> <title>提交任意2个整数的页面</title> </head>  
+  <body>
+      <h3> 按下列格式要求，输入两个整数：</h3><br>
+      <form action="ch07_4_show.jsp" method="post">
+         开始数据：<input name="shuju1"><br><br>
+         结束数据：<input name="shuju2"><br><br>
+         <input type=submit  value="提交">
+     </form>  
+  </body>
+</html>
+
+（3）从提交页面获取两数据，并使用<jsp:useBean>标签声明JavaBean，并通过该对象调用求和方法，然后显示结果(ch07_4_show.jsp)，其代码如下。
+<!-- 程序ch07_4_show.sp -->
+<%@ page language="java" import="java.util.*" pageEncoding="GB2312"%>
+<html>
+  <head>  <title>利用JavaBean+JSP求两数和</title> </head>  
+  <body> 
+     <jsp:useBean id="he" class="ch07_4.Add2"/>
+     <jsp:setProperty name="he" property="*"/> 
+     <p><%=he.getA()%>加到<%= he.getB()%>的和值是: <%=he.sum()%> </p>
+     <p>现在的时间是: <%= new Date() %> </p> 
+  </body>
+</html>

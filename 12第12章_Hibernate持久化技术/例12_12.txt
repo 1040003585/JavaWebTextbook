@@ -1,0 +1,39 @@
+（1）Employee类(省略set和get方法)
+public class Employee {   
+   private int id;
+   private String name;
+   private Department depart;
+}
+（2）Department类(省略set和get方法)
+public class Department {
+   private int id;
+   private String name;
+}
+（3）Employee配置文件
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="domain">
+   <class name="Employee">
+      <id name="id">
+         <generator class="native" />
+      </id>
+      <property name="name"/>
+      <many-to-one name="depart" column="depart_id"></many-to-one>
+   </class>
+</hibernate-mapping>
+说明：column="depart_id"中depart_id是外键，对应Deparment表的主键。
+（4）Department配置文件
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="domain">
+   <class name="Department">
+      <id name="id">
+         <generator class="native" />
+      </id>
+      <property name="name"/>
+   </class>
+</hibernate-mapping>

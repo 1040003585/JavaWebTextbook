@@ -1,0 +1,48 @@
+（1）登录页面Login.jsp
+	<%@ page pageEncoding="UTF-8"%>
+	<html>
+	  <head><title>带图形验证码的登录</title></head>
+	  <body>
+	    <form method="post" name="form1">
+	       用户名<input type="text" name="userid" 
+	              onclick="mes.innerHTML=''" value="${param.userid }"/><br/>
+	       密码<input type="password" name="userpwd" value="${param.userpwd }"/><br/>
+	       验证码<input type="text" name="checkcode" />
+	       <img border="0" src="checkcode"/>
+	       <input type="submit" value="换一张" onclick="form1.action='changecheckcode'"/>
+	       <br/>
+	       <input type="submit" value="登录" onclick="form1.action='logcheck'"/>
+	       <input type="reset" value="重置"/>
+	       <div id="mes">${info} </div>
+	    </form>
+	  </body>
+	</html>
+（2）产生验证码的Servlet（地址为checkcode）见10.1.2节。
+（3）处理登录请求的Servlet（地址为logcheck），只列出核心代码：
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+				throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		String userid = request.getParameter("userid");
+		String userpwd = request.getParameter("userpwd");
+		String usercheckcode = request.getParameter("checkcode");
+		String info = "";
+		HttpSession session = request.getSession();
+		String servercheckcode = (String) session.getAttribute("checkCode");
+		if (!servercheckcode.equalsIgnoreCase(usercheckcode)) {
+			info = "验证码不正确，请重新输入";
+		} else if ("张三".equals(userid) && "123".equals(userpwd)) {
+			info = "登录成功";
+		}
+		else {
+			info = "用户名或密码不正确";
+		}
+	
+		request.setAttribute("info", info);
+		RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+		rd.forward(request, response);
+	}
+（4）刷新验证码的Servlet（地址为changecheckcode），只列出核心代码：
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+				throws ServletException, IOException {
+		request.getRequestDispatcher("/login.jsp").forward(request, response);
+	}

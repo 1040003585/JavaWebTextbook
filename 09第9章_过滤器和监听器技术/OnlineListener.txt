@@ -1,0 +1,15 @@
+package listener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+public class OnlineListener implements HttpSessionListener {
+    private static int onlineCount=0;
+    public void sessionCreated(HttpSessionEvent sessionEvent) {
+	   onlineCount++; 
+    }
+    public void sessionDestroyed(HttpSessionEvent sessionEvent) {
+	   if(onlineCount>0)  onlineCount--;
+    }
+	public static int getOnlineCount(){
+	    	return onlineCount;
+	}
+}

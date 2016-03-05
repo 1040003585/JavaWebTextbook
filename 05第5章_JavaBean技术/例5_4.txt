@@ -1,0 +1,149 @@
+（1）在类路径(src)下建立文件db.properties，在该文件内存放数据库的基本信息：数据库驱动程序名，数据库连接字符串，数据库用户名称及其密码。其内容如下：
+driver=com.mysql.jdbc.Driver
+url=jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8
+username=root
+password=123456
+（2）建立一个获取连接和释放资源的工具类JdbcUtil.java
+package dbc;
+import java.sql.*;
+import java.util.Properties;
+public final class JdbcUtil {
+	private static String driver ;
+	private static String url ;
+	private static String user ;
+	private static String password ;
+     private static Properties pr=new Properties();
+	private JdbcUtils() {}
+	//设计该工具类的静态初始化器中的代码，该代码在装入类时执行，且只执行一次
+	static { 
+	   try {pr.load(JdbcUtils.class.getClassLoader().getResourceAsStream("db.properties"));
+		  driver=pr.getProperty("driver");
+		  url=pr.getProperty("url");
+		  user=pr.getProperty("username");
+		  password=pr.getProperty("password");
+		  Class.forName(driver);
+		} catch (Exception e) {
+			throw new ExceptionInInitializerError(e);
+		}
+	}
+	//设计获得连接对象的方法getConnection()
+	public static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(url, user, password);
+	}
+	//设计释放结果集、语句和连接的方法free()
+	public static void free(ResultSet rs, Statement st, Connection conn) {
+		try { if (rs != null) rs.close();
+		} catch (SQLException e) {e.printStackTrace();
+		} finally {
+			try { if (st != null) st.close();
+			} catch (SQLException e) {e.printStackTrace();
+			} finally {
+				  if (conn != null)
+				    try { conn.close();
+				    } catch (SQLException e) {e.printStackTrace();
+				   }
+		             }
+		     }
+	    }
+	}
+(3)建立类User.java实现记录信息对象化，基于对象对数据库关系表进行操作。
+package vo;
+public class User {
+	private String userid,username,sex;
+	public String getUserid() {return userid;}
+	public void setUserid(String userid) {this.userid = userid;}
+	public String getUsername() {return username;}
+	public void setUsername(String username) {this.username = username;}
+	public String getSex() {return sex;}
+	public void setSex(String sex) {this.sex = sex;}
+}
+（4）在上面步骤的基础上建立类UserDao.java封装基本的数据库操作。
+package dao;
+import java.sql.*;
+import java.util.ArrayList;
+import vo.User;
+import dbc.JdbcUtil;
+public class UserDao {
+   //向数据库中添加用户记录的方法add()
+   public void add(User user) throws Exception{
+	 Connection conn = null;
+	 PreparedStatement ps = null;
+	 try {
+		 conn = JdbcUtil.getConnection();
+		 String sql = "insert into user  values (?,?,?) ";
+		 ps = conn.prepareStatement(sql);
+		 ps.setString(1, user.getUserid());
+		 ps.setString(2,user.getUsername());
+		 ps.setString(3,user.getSex());
+		 ps.executeUpdate();
+	 }finally {JdbcUtil.free(null,ps, conn);}
+   }
+   //修改数据库用户记录的方法update()
+   public void update(User user) throws Exception{
+	Connection conn = null;
+	PreparedStatement ps = null;
+	try {
+		conn = JdbcUtil.getConnection();
+		String sql = "update user set username=?,sex=? where userid=? ";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1,user.getUsername());
+		ps.setString(2,user.getSex());
+		ps.setString(3, user.getUserid());
+		ps.executeUpdate();
+	}finally {JdbcUtil.free(null,ps, conn);}
+   }
+   //删除数据库用户记录的方法delete()
+   public void delete(String userId) throws Exception{
+	 Connection conn = null;
+	 PreparedStatement ps = null;
+	 try {
+		conn = JdbcUtil.getConnection();
+		String sql = "delete from user where userid=?";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1,userId);
+		ps.executeUpdate();
+	}finally {JdbcUtil.free( null,ps, conn);}
+   }
+   //根据id查询用户的方法findUserById()
+   public User findUserById(String userId) throws Exception{
+	Connection conn = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	User user=null;
+	try {
+		conn = JdbcUtil.getConnection();
+		String sql = "select * from user where userid=? ";
+		ps = conn.prepareStatement(sql);
+		ps.setString(1, userId);
+		rs=ps.executeQuery();
+		if(rs.next()){
+		   user=new User();
+		   user.setUserid(rs.getString(1));
+		   user.setUsername(rs.getString(2));
+		   user.setSex(rs.getString(3));
+		}
+	}finally {JdbcUtil.free(rs, ps, conn);}
+	return user;
+   }
+   //查询全部用户的方法QueryAll()
+   public List<User> QueryAll() throws Exception{
+	Connection conn = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	List<User> userList=new ArrayList<User>();
+	try {
+		conn = JdbcUtil.getConnection();
+		String sql = "select * from user ";
+		ps=conn.prepareStatement(sql);
+		rs=ps.executeQuery();
+		while(rs.next()){
+		   User user=new User();
+		   user.setUserid(rs.getString(1));
+		   user.setUsername(rs.getString(2));
+		   user.setSex(rs.getString(3));
+		   userList.add(user);
+		}
+	}finally {JdbcUtil.free(rs, ps, conn);}
+	return userList;
+   }
+}

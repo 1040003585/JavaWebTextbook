@@ -1,0 +1,97 @@
+【实现】（1）首先编写复数类JavaBean：Complex.java，其代码如下：
+package beans;
+public class Complex {
+	  private double real;
+	  private double ima;
+	  public Complex(double real, double ima) {this.real = real;this.ima = ima;}
+	  public Complex() {}
+	  public double getIma() {return ima;}
+	  public void setIma(double ima) {this.ima = ima;}
+	  public double getReal() {return real;}
+	  public void setReal(double real) {this.real = real;}
+	  public Complex add(Complex a) {
+		return new Complex(this.real + a.real, this.ima + a.ima);
+	  }
+	  public Complex sub(Complex a) {
+		return new Complex(this.real - a.real, this.ima - a.ima);
+	  }
+	  public Complex mul(Complex a) {
+		double x= this.real * a.real - this.ima * a.ima;
+		double y= this.real* a.ima + this.ima * a.real;
+		return new Complex(x,y);
+	  }
+	  public Complex div(Complex a) {
+		double z = a.real * a.real + a.ima * a.ima;
+		double x = (this.real * a.real + this.ima * a.ima) / z;
+		double y = (this.ima * a.real - this.real * a.ima) / z;
+		return new Complex(x, y);
+	  }
+	  public String info() {
+		if (ima >= 0.0)	return real + "+" + ima + "*i";
+		else return real + "-" + (-ima) + "*i";
+	  }
+}
+（2）提交信息的页面input.jsp，在该页面内需要提交5个参数，其代码如下：
+<%@ page pageEncoding="UTF-8"%>
+<html> 
+   <head><title>提交数据页面</title></head>
+   <body>
+      <form method="post" action="calculate">
+      请输入第一个复数的实部：<input type="text" name="r1"/><br>
+      请输入第一个复数的虚部：<input type="text" name="i1"/><br>
+      选择运算类型
+      <select name="oper">
+          <option>+</option>
+          <option>-</option>
+          <option>*</option>
+          <option>/</option>
+      </select> <br/>
+      请输入第二个复数的实部：<input type="text" name="r2"/><br>
+      请输入第二个复数的虚部：<input type="text" name="i2"/><br>
+      <input type="submit" value="计算"/>
+      </form> 
+   </body>
+</html>
+（3）实现控制的Servlet：CaculateServlet.java，其代码如下：
+package servlets;
+import java.io.IOException;
+import javax.servlet.*;
+import beans Complex;
+public class CaculateServlet extends HttpServlet {
+		public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+    double r1=Double.parseDouble(request.getParameter("r1"));
+    double i1=Double.parseDouble(request.getParameter("i1"));
+    String oper=request.getParameter("oper");
+    double r2=Double.parseDouble(request.getParameter("r2"));
+    double i2=Double.parseDouble(request.getParameter("i2"));
+    String result="";
+    Complex c1=new Complex(r1,i1);
+    Complex c2=new Complex(r2,i2);
+    if("+".equals(oper)) result=c1.add(c2).info();
+    else if("-".equals(oper)) result=c1.sub(c2).info();
+    else if("*".equals(oper)) result=c1.mul(c2).info();
+    else result=c1.div(c2).info();
+    request.setAttribute("outputMessage", result);
+    request.getRequestDispatcher("/output.jsp").forward(request,response);
+  }
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+      doPost(request,response);
+  }
+}
+（4）修改web.xml，完成对CaculateServlet.java的配置，添加的配置信息如下：
+<servlet> 
+   <servlet-name>CalculateServlet </servlet-name>
+   <servlet-class> servlets.CaculateServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+   <servlet-name>CalculateServlet </servlet-name>
+   <url-pattern>/calculate </url-pattern>
+</servlet-mapping>
+（5）显示计算结果的页面：output.jsp，其代码如下：
+<%@ page  pageEncoding="UTF-8"%>
+<html> 
+   <head><title>显示结果页面</title></head>  
+   <body>  <%=request.getAttribute("outputMessage") %> </body>
+</html>

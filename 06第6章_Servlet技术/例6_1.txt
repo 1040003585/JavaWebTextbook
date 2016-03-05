@@ -1,0 +1,50 @@
+（1）登录页面login.jsp：
+<%@ page  pageEncoding="UTF-8"%>
+<html>
+  <head><title>登录页面</title></head>
+  <body>
+   <form action="loginCheck" method="post">
+       请输入用户名：<input type="text" name="username"/><br/>
+       请输入密码：<input type="password" name="userpwd"/><br/>
+       <input type="submit" value="登录"/>
+       <input type="reset"/>
+   </form>
+  </body>
+</html>
+（2）处理登录的Servlet：LoginCheckServlet.java
+package servlets;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+public class LoginCheckServlet extends HttpServlet {
+		public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+    String userName=request.getParameter("username");
+    String userPwd=request.getParameter("userpwd");
+    String info="";
+    if(("abc".equals(userName))&&"123".equals(userPwd)){
+    	info="欢迎你"+userName+"！";
+    }else{
+    	info="用户名或密码不正确！";
+    }
+    request.setAttribute("outputMessage", info);
+    request.getRequestDispatcher("/info.jsp").forward(request,response);
+	}
+}
+（3）修改配置文件，在web.xml中，添加LoginCheckServlet的配置信息：
+<servlet>
+     <servlet-name> LoginCheckServlet </servlet-name>
+     <servlet-class> servlets.LoginCheckServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+     <servlet-name> LoginCheckServlet </servlet-name>
+     <url-pattern>/loginCheck</url-pattern>
+</servlet-mapping>
+（4）显示结果的页面Info.jsp:
+<%@ page  pageEncoding="UTF-8"%>
+<html>
+   <head><title>显示结果页面</title></head>  
+   <body> <%=request.getAttribute("outputMessage") %> </body>
+</html>

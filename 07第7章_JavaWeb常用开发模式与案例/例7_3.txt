@@ -1,0 +1,53 @@
+【实现】（1）设计提交登录信息的JSP页面（ch07_3_tijiao.jsp），其代码如下：
+<%@ page language="java"  pageEncoding="GB2312"%>
+<html> 
+  <head><title>用户登录提交页面</title></head>  
+  <body>
+    <form  action="ch07_3_yanzheng.jsp" method="post">
+         用  户  名：<input type="text" name="username"><br><br>
+         用户密码：<input type="password" name="pass"><br><br> 
+         <input type="submit" value="登录">
+    </form>
+  </body>
+</html>
+
+
+（2）设计需要获取两个登录信息的值，并连接数据库，实现验证的JSP页面(ch08_3_yanzheng.jsp)，其代码如下。
+<%@ page language="java" import="java.sql.*" pageEncoding="GB2312"%>
+<html>
+  <head>   <title>登录验证页面</title>  </head>  
+  <body> <%
+  try{
+      Connection conn =null; 
+      PreparedStatement pstmt= null;;
+      ResultSet  rs=null;      
+      String driverName = "com.mysql.jdbc.Driver";   //驱动程序名
+      String dbName ="user";                      //数据库名
+      String url1="jdbc:mysql://localhost/" + dbName;
+      String url2="?user=root&password=123456"; 
+      String url3="&useUnicode=true&characterEncoding=GB2312";
+      String url =url1+url2+url3; 
+      Class.forName(driverName);
+      conn = DriverManager.getConnection(url); 
+      request.setCharacterEncoding("GB2312");
+      String name=request.getParameter("username");
+      String pw=request.getParameter("pass");
+      String  sql="select * from user_b where(uname=? and upassword=?)";
+      pstmt= conn.prepareStatement(sql);
+      pstmt.setString(1,name);
+      pstmt.setString(2,pw); 
+      rs=pstmt.executeQuery(); 
+      if(rs.next()){
+         %> <%=name %>:登录成功！<br> <%
+       }
+      else {%>
+        <%=name %>:登录失败！<br> <%}
+      }catch(Exception e){ %>
+           出现异常错误！<br> <%=e.getMessage()%>
+     <% }finally {
+         if(rs!=null){ rs.close(); }
+	    if(pstmt!=null){ pstmt.close(); }
+         if(conn!=null){ conn.close(); }
+     } %>   
+  </body>
+</html>

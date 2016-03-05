@@ -1,0 +1,11 @@
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+				throws ServletException, IOException {
+		String saveDirectory ="d:\\tools\\upload";
+		File savedir=new File(saveDirectory);
+		if(!savedir.exists()){//如果上传的路径不存在，则创建它
+			savedir.mkdirs();
+		}
+		int maxPostSize = 5 * 1024 * 1024 ;  //上传大小限制：5M
+		MultipartRequest multi;
+	     multi= new MultipartRequest(request, saveDirectory, maxPostSize,"utf-8");
+	}

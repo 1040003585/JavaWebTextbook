@@ -1,0 +1,152 @@
+（1）Struts配置文件：struts.xml：
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+     <!-- Configuration for the default package. -->
+    <package name="default" extends="struts-default">
+     
+        <action name="lookMessageAction" class="studentAction.LookMessageAction">
+            <result name="success">/student/lookMessage.jsp</result>
+            <result name="input">/student/index.jsp</result>
+        </action>
+        <action name="addMessageAction" class="studentAction.AddMessageAction">
+            <result name="success" type="chain">lookMessageAction</result>
+            <result name="input">/student/addMessage.jsp</result>
+        </action>
+        <action name="findMessageAction" class="studentAction.FindMessageAction">
+            <result name="success">/student/updateMessage.jsp</result>
+            <result name="input">/student/findMessage.jsp</result>
+        </action>
+        <action name="updateMessageAction" class="studentAction.UpdateMessageAction">
+            <result name="success" type="chain">lookMessageAction</result>
+            <result name="input">/student/updateMessage.jsp</result>
+        </action>
+        <action name="deleteMessageAction" class="studentAction.DeleteMessageAction">
+            <result name="success" type="chain">lookMessageAction</result>
+            <result name="input">/student/deleteMessage.jsp</result>
+        </action>
+    </package>
+</struts>
+（2）Hibernate配置文件：hibernate.cfg.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/student</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">sa</property>
+    <mapping resource=" po/Stuinfo.hbm.xmll"/>
+  </session-factory>
+</hibernate-configuration>
+（3）PO类Stuinfo.java（get，set方法省略）
+package po;
+public class Stuinfo  implements java.io.Serializable {
+     private String id;
+     private String name;
+     private String sex;
+     private int age;
+     private float weight;
+}
+（4）Hibernate映射文件：Stuinfo.hbm.xml
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2011-12-9 12:17:31 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name=" po.Stuinfo " table="stuinfo" catalog="student">
+        <id name="id" type="string">
+            <column name="id" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="20" not-null="true" />
+        </property>
+        <property name="sex" type="string">
+            <column name="sex" length="5" not-null="true" />
+        </property>
+        <property name="age" type="int">
+            <column name="age" not-null="true" />
+        </property>
+        <property name="weight" type="float">
+            <column name="weight" precision="10" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
+（5）页面以添加记录页面addMessage.jsp为例：
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title><s:text name="学生信息管理系统-增加" /></title>
+	</head>
+	<body bgcolor="pink">
+		<s:div align="center">
+			<s:include value="menu.jsp">
+			 <s:param name="oper">2</s:param>
+			</s:include>
+			<center><font color="red" size="6">添加学生信息</font></center>
+		</s:div>
+		<s:form action="addMessageAction" method="post" >
+		  <table align="center" width="30%" bgcolor="gray" border="5">
+		    <tr>
+			<td><s:textfield name="stuinfo.id" label="学号" maxLength="16"></s:textfield></td>
+			<td><s:textfield name="stuinfo.name" label="姓名" maxLength="16" /></td>
+			<td><s:select name="stuinfo.sex" label="性别" list="{'男','女'}" /></td>
+			<td><s:textfield name="stuinfo.age" label="年龄" /></td>
+			<td><s:textfield name="stuinfo.weight" label="体重" /></td>
+			<td colspan="2">
+				<s:submit value="提交" />
+				<s:reset value="清除" />
+			</td>
+	        </tr>
+	     </table>
+      </s:form>
+	 </body>
+</html>
+（6）Action类以AddMessageAction为例：
+package studentAction;
+import java.util.List;
+import po.Stuinfo;
+import com.opensymphony.xwork2.ActionSupport;
+import dao.StudentDao;
+public class AddMessageAction extends ActionSupport {
+	private Stuinfo stuinfo;
+	public Stuinfo getStuinfo() {return stuinfo;}
+	public void setStuinfo(Stuinfo stuinfo) {this.stuinfo = stuinfo;}
+	public void validate() {
+		if (stuinfo.getId() == null || stuinfo.getId().length() == 0) {
+			addFieldError("stuinfo.id", "id不能为空!");
+		} else {
+			StudentDao dao = new StudentDao();
+			List list = dao.findInfo("id", stuinfo.getId());
+			if (!list.isEmpty()) {
+				addFieldError("stuinfo.id", " id不能重复");
+			}
+		}
+		if (stuinfo.getName() == null || stuinfo.getName().length() == 0) {
+			addFieldError("stuinfo.name", "姓名不能为空");
+		}
+		if (stuinfo.getAge() > 130) {
+			addFieldError("stuinfo.age", "年龄值非法");
+		}
+		if (stuinfo.getWeight() > 500) {
+			addFieldError("stuinfo.weight", "体重值非法 ");
+		}
+	}
+	public String execute() throws Exception {
+		StudentDao dao = new StudentDao();
+		String message = "input";
+		boolean save = dao.saveInfo(stuinfo);
+		if (save) {
+			message = "success";
+		}
+		return message;
+	}
+}
+（7）Hibernate工具类与Dao类同上一案例类似，不再给出。
+

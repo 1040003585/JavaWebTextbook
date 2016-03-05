@@ -1,0 +1,60 @@
+（1）登录页面：login.jsp
+<%@ page  pageEncoding="UTF-8"%>
+<html>
+<head><title>用户登录</title></head>
+  <body>   
+    <form method="post" action="logincheck.jsp">
+     用户名：<input type="text" size="10" name="username"><br/>
+     密　码：<input type="password" name="userpwd"/><br/>
+     <input type="submit" value="登录">     
+    </form>
+  </body>
+</html>
+(2)登录处理：logincheck.jsp
+<%@ page  pageEncoding="UTF-8"%>
+<html>
+   <head><title>登录处理</title></head>
+   <body>   
+      <% 
+       String un=request.getParameter("username");//获取用户名
+       if(un!=null){//不对用户名和密码进行检查
+         Cookie c=new Cookie("username",un);//创建Cookie对象，名称为username
+         c.setMaxAge(30*24*3600);//设置Cookie有效期为30天
+         response.addCookie(c);//将Cookie对象保存到客户端
+         session.setAttribute("username",un);//将用户名存到session范围内用于权限检查
+         response.sendRedirect("main.jsp");//重定向到主页面
+       } 
+     %>
+   </body>
+</html>
+(3)主页面：main.jsp
+<%@ page  pageEncoding="UTF-8"%>
+<html>
+   <head><title>主页面</title></head>
+   <body> <%
+      String username=(String)session.getAttribute("username") ;
+      if(username==null){//session中用户名为空说明用户没有登录
+         Cookie[] cs=request.getCookies();
+         String v=null;
+         if(cs!=null){
+            for(int i=0;i<cs.length;i++){//获取名称为username的Cookie对象值
+               if(cs[i].getName().equals("username")){
+                  v=cs[i].getValue();
+               }
+            }
+         } 
+         if(v!=null){//Cookie值不空，自动登录成功
+           session.setAttribute("username",v);
+           out.println(v+",您好");
+         }
+         else{ //自动登录失败，转到登录页面
+            out.print("您还没注册，2秒后转到注册页面");
+            response.setHeader("Refresh","2;url=login.jsp");         
+         }
+    }
+    else{//session中用户名不空说明用户已经登录
+       out.println(username+",您好");
+    }
+  %>
+   </body>
+</html>

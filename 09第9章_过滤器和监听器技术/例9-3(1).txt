@@ -1,0 +1,23 @@
+package test;
+import java.io.*;
+import javax.servlet.*;
+//通过过滤IP来控制访问操作
+public class FilterIP implements Filter{
+   private String FilteredIP;   //存放被过滤的IP
+   public void init(FilterConfig conf) throws ServletException{ //过滤器初始化
+	   FilteredIP=conf.getInitParameter("FilteredIP");
+	   if(FilteredIP==null) FilteredIP="";
+   }
+   public void doFilter( ServletRequest request, ServletResponse response,
+	FilterChain chain) throws IOException, ServletException {//过滤操作
+	    String remoteIP = request.getRemoteAddr();
+	    if(remoteIP.equals(FilteredIP)){
+           RequestDispatcher dispatcher = request.getRequestDispatcher("ErrorInfo.jsp");
+	    //读出本地IP，将其与要过滤掉的IP比较，如果相同，就转移到错误处理页面
+		  dispatcher.forward(request,response);
+		} else{
+		  chain.doFilter(request,response);  //将请求转发给过滤链上的其他对象
+	    }
+   }
+   public void destroy(){ }//销毁操作
+ }

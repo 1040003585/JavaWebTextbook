@@ -1,0 +1,64 @@
+（1）提交两个数据表单页面（ch07_6_tijiao.jsp），代码如下：
+<%@ page language="java" pageEncoding="GB2312"%>
+<html>
+  <head>  <title>提交任意2个整数给Servlet的JSP页面</title> </head>  
+  <body>
+  <h3> 按下列格式要求，输入两个数据：</h3><br>
+   <form action="ch07_6_servlet_yunsuan" method="post"> 
+         开始数据1：<input name="shuju1"><br><br> 
+         结束数据2：<input name="shuju2"><br><br>
+         <input type=submit  value="提交">
+   </form>  
+  </body>
+</html>
+
+（2）ch07_6_servlet_yunsuan.java负责计算两数据之间累加值并控制跳转的Servlet，其代码如下：
+package ch07_6_servlet;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+public class ch08_6_servlet_yunsuan extends HttpServlet {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("GB2312");
+		String s1=request.getParameter("shuju1");
+		String s2=request.getParameter("shuju2");
+		int d1=Integer.parseInt(s1);
+		int d2=Integer.parseInt(s2);
+         int sun=0;
+         int x=d1;
+		while ( x <=d2 ){ sum += x; ++x; }
+		request.setAttribute("sum",sum);
+		request.getRequestDispatcher("ch08_6_show.jsp").forward(request,response);
+	}
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		doGet(request, response);
+	}
+}
+
+（3）Servlet的配置文件Web.xml，其关键的配置信息：
+  <servlet>
+    <servlet-name>ch07_6_servlet_yunsuan</servlet-name>
+    <servlet-class>ch07_6_servlet.ch07_6_servlet_yunsuan</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ch07_6_servlet_yunsuan</servlet-name>
+    <url-pattern>/ch07_6_servlet_yunsuan</url-pattern>
+  </servlet-mapping>
+
+（4）显示计算结果的页面（ch07_6_show.jsp），代码如下：
+<%@ page language="java" import="java.util.*" pageEncoding="GB2312"%>
+<html>
+  <head>  <title>利用Servlet+JSP求两数和及连接串的显示页面</title> </head>  
+  <body> <%
+        String s1=request.getParameter("shuju1");
+        String s2=request.getParameter("shuju2");
+        Integer sum=(Integer)request.getAttribute("sum");        
+        %>   
+        <p><%=s1%>加到<%= s2%>的和值是: <%=sum%> </p>
+       <p>现在的时间是: <%= new Date() %> </p>  
+  </body>
+</html>

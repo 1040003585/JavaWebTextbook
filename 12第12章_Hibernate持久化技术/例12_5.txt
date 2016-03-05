@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="domain">    //类“User”所在的包名
+   <class name="User">                //建立的POJO名称：User
+      <id name="id">                  //类中定义的属性，并作为主键
+         <generator class="native"/>     //主键形成方式：由hibernate自动创建主键值
+      </id>
+      <property name="name"/>         //类中定义的属性
+      <property name="birthday" />      //类中定义的属性
+   </class>
+</hibernate-mapping>

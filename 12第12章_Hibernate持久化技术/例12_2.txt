@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="domain">
+<class name="User">
+ <id name="id">
+  <generator class="increment" />
+ </id>
+ <property name="name"/>
+ <property name="birthday" />
+</class>
+</hibernate-mapping>
+说明：
+（1）映射文件的主名同PO类名相同，文件和PO字节码文件放置在一起。
+（2）Hibernate映射文件用于说明Java对象与哪个表中的记录相对应，以及Java
+对象的各个属性分别对应表中哪一列，不同性质的属性（例如主键和普通属性）用不同的标签来映射，如果Java对象的某个属性不需要存在数据库中，则映射文件中就不需要配置这个属性。
+（3）<class>定义类，该元素的常用属性：
+	name：指定持久化类的名称。
+	table：对应数据库表名，如果省略则同类名一致。
+	catalog：指定数据库名称。
+（4）<id>定义主键，Hibernate使用OID（对象标识符）标识对象的唯一性，OID是关系数据库中主键在Java对象模型中的等价物。在运行时，Hibernate根据OID来维持Java对象和数据库表中记录的对应关系。该元素常用属性：
+	name：持久化类的标识符属性的名字。
+	type：标识Hibernate基本类型。
+	column：数据库表的主键字段名。
+（5）<generator>设置主键生成方式，该元素的作用是指定主键的生成器，通过class属性指定生成器对应的类。
+Hibernate提供的常用内置生成器有：
+	increment：递增，主键值是自动增长的。
+	assigned：主键值通过程序指定。
+	native：由数据库类型决定主键生成方式。
+（6）<property>定义属性，常用属性：
+	name：持久化类的属性名。
+	column：数据库表的字段名。

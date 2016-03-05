@@ -1,0 +1,20 @@
+public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+    int pageNo = 1;int pageSize=5;
+    String strPageNo = request.getParameter("pageNo"); 
+    if(strPageNo != null){
+       pageNo = Integer.parseInt(strPageNo); // 把字符串转换成数字
+    }
+    UserDao userDao = new UserDao();
+    try{
+       List<User> userlist = userDao.listUser(pageNo);
+       request.setAttribute("userlist",userlist);
+       Integer pageCount = new Integer(userDao.getPageCount());
+       request.setAttribute("pageCount",pageCount);
+       request.setAttribute("pageNo",pageNo);
+       RequestDispatcher rd = request.getRequestDispatcher("userlist.jsp");
+       rd.forward(request,response); 
+    }catch(Exception e){
+       e.printStackTrace();
+    }
+ }
