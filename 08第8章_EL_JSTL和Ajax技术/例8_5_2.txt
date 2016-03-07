@@ -1,8 +1,0 @@
-if(xmlHttp_request.readyState==4){  //0未初始化，1读取中,2已读取，3交互中，4完成
-  if(xmlHttp_request.status==200){        //404文件没找到，200成功
-    var m= xmlHttp_request.responseText;    //信息类型为：responseText
-    //将获取的响应信息，以tt为id的属性返回并显示在网页上
-    document.getElementById("tt").innerHTML=m; 
-  }
-}
-

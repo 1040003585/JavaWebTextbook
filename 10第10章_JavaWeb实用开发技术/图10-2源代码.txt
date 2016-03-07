@@ -1,6 +1,0 @@
-	<p> 
-	   <strong>好久不见了</strong>
-	   <img alt="smiley" height="20"
-	        src="http://localhost:8080/editor/ckeditor/plugins/smiley/images/regular_smile.gif" 
-	        title="smiley" width="20" />
-	</p>

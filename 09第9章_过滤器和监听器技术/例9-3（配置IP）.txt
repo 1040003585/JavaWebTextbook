@@ -1,8 +1,0 @@
-<filter> 
-     <filter-name>FilterIP</filter-name>
-     <filter-class>test.FilterIP</filter-class>
-     <init-param>
-        	<param-name>FilteredIP</param-name>
-        	<param-value>127.0.0.1</param-value>
-     </init-param>
-</filter> 

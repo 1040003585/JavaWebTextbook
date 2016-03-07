@@ -1,8 +1,0 @@
-HtmlEmail email = new HtmlEmail();
-email.setHostName("smtp.163.com");//设置邮箱服务器
-email.setAuthentication("javalesson2011", "java2011");//设置用户名和密码
-email.addTo("***@**.com");//收件人
-email.setFrom("javalesson2011@163.com");//发件人
-email.setSubject("Subject");//邮件主题
-email.setHtmlMsg("<font color='red'>123</font>");//html形式的邮件内容
-email.send();//发送邮件
