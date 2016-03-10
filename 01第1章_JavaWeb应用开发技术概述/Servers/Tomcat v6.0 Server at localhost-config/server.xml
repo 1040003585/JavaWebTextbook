@@ -131,7 +131,7 @@
                prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
         -->
 
-      <Context docBase="1_3_4配置虚目录" path="/1_3_4配置虚目录" reloadable="true" source="org.eclipse.jst.j2ee.server:1_3_4配置虚目录"/></Host>
+      <Context docBase="helloapp2" path="/helloapp2" reloadable="true" source="org.eclipse.jst.jee.server:helloapp2"/><Context docBase="helloapp" path="/helloapp" reloadable="true" source="org.eclipse.jst.jee.server:helloapp"/></Host>
     </Engine>
   </Service>
 </Server>
