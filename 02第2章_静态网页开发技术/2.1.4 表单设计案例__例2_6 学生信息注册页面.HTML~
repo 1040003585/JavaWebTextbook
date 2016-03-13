@@ -3,7 +3,7 @@
   <body bgcolor="#222"> 
    <h3 align="center">学生信息注册</h3>
      <form  name="stu" action=""> 
-      <table  align="center" bgcolor="#ddd" border="10"> 
+      <table  align="center" bgcolor="#ddd" padding="10"> 
        <tr> <th colspan="3">学生信息注册</th> </tr> 
        <tr> <th colspan="3"> </th> </tr> 
        <tr> <td>姓名：</td> <td><input type="text" name="stuName"></td> </tr> 
